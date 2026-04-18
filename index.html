@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>補助金ナビ｜丸菱北部九州販売</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1E3A5F;
+  --teal: #1A7A5E;
+  --amber: #B45309;
+  --green: #2D8C47;
+  --red: #B91C1C;
+  --bg: #F5F7FA;
+  --surface: #FFFFFF;
+  --border: #E0E4EB;
+  --text: #1A1F2E;
+  --muted: #6B7280;
+  --highlight: #EEF2F8;
+  --teal-light: #E6F4EF;
+  --amber-light: #FEF3E2;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--navy);
+  color: white;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+header h1 { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: .04em; }
+.header-sub { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
+.badge-marubishi {
+  background: var(--teal);
+  color: white;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+
+/* ── LAYOUT ── */
+.container { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* ── STEP INDICATOR ── */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 28px;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: all .25s;
+}
+.step-label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.step-line { flex: 1; height: 2px; background: var(--border); margin: 0 6px; transition: all .25s; }
+.step-item.active .step-num { background: var(--navy); border-color: var(--navy); color: white; }
+.step-item.active .step-label { color: var(--navy); font-weight: 700; }
+.step-item.done .step-num { background: var(--teal); border-color: var(--teal); color: white; }
+.step-item.done .step-label { color: var(--teal); }
+.step-line.done { background: var(--teal); }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.card-title {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title .icon {
+  width: 30px; height: 30px;
+  background: var(--highlight);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 18px; }
+label.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.field-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+input[type="text"], textarea, select {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color .2s;
+  outline: none;
+}
+input[type="text"]:focus, textarea:focus, select:focus { border-color: var(--navy); }
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── CHECKBOXES ── */
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.check-item {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: all .18s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  user-select: none;
+}
+.check-item:hover { border-color: var(--navy); background: var(--highlight); }
+.check-item.selected { border-color: var(--teal); background: var(--teal-light); }
+.check-item .cb {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  transition: all .18s;
+}
+.check-item.selected .cb { background: var(--teal); border-color: var(--teal); color: white; }
+
+/* ── RANGE ── */
+.range-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+input[type="range"] {
+  width: 100%;
+  height: 5px;
+  accent-color: var(--navy);
+  cursor: pointer;
+}
+
+/* ── BUTTON ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .18s;
+}
+.btn-primary {
+  background: var(--navy);
+  color: white;
+  width: 100%;
+}
+.btn-primary:hover { background: #152d4a; }
+.btn-primary:disabled { background: #9CA3AF; cursor: not-allowed; }
+.btn-secondary {
+  background: transparent;
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+}
+.btn-secondary:hover { background: var(--highlight); }
+.btn-sm {
+  padding: 7px 14px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── AI RESULT ── */
+.result-section {
+  background: var(--teal-light);
+  border: 1.5px solid var(--teal);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.result-section h3 {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--teal);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.subsidy-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.subsidy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.subsidy-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--navy);
+}
+.subsidy-ministry {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.meti { background: #DBEAFE; color: #1E40AF; }
+.maff { background: #D1FAE5; color: #065F46; }
+.subsidy-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.subsidy-meta span { display: flex; align-items: center; gap: 3px; }
+.subsidy-why {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  border-left: 3px solid var(--teal);
+  padding-left: 10px;
+  margin-top: 8px;
+}
+
+.reply-box {
+  background: var(--amber-light);
+  border: 1.5px solid #D97706;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.reply-box h3 {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--amber);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.reply-text {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  color: var(--text);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+.btn-copy {
+  background: var(--teal);
+  color: white;
+  flex: 1;
+}
+.btn-copy:hover { background: #155f49; }
+.btn-escalate {
+  background: var(--amber);
+  color: white;
+  flex: 1;
+}
+.btn-escalate:hover { background: #92400e; }
+
+/* ── LOADING ── */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 14px;
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--navy);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: var(--muted); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--navy);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 999;
+  transition: transform .3s;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── MATCH INDICATOR ── */
+.match-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.match-fill {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--teal);
+  transition: width .4s;
+}
+.match-bg { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.priority-high { background: #FEE2E2; color: #B91C1C; }
+.priority-med { background: #FEF3C7; color: #92400E; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .check-grid { grid-template-columns: 1fr; }
+  .action-buttons { flex-direction: column; }
+  .container { padding: 20px 14px 60px; }
+}
+
+/* ── CONSULT MODAL ── */
+#consultModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  padding: 20px;
+}
+#consultModal.open { display: flex; }
+.modal-card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
+.modal-title {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal-summary {
+  background: var(--highlight);
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.modal-summary strong { color: var(--navy); }
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.btn-send {
+  background: var(--teal);
+  color: white;
+  flex: 1;
+}
+.btn-send:hover { background: #155f49; }
+.btn-send:disabled { background: #9CA3AF; cursor: not-allowed; }
+.btn-cancel {
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+  flex: 0 0 auto;
+  padding: 12px 18px;
+}
+.btn-cancel:hover { background: var(--highlight); }
+.modal-success {
+  display: none;
+  text-align: center;
+  padding: 20px 0 8px;
+}
+.modal-success .success-icon { font-size: 40px; margin-bottom: 10px; }
+.modal-success p { font-size: 14px; color: var(--text); line-height: 1.7; }
+
+/* ── LOGIN OVERLAY ── */
+#loginOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 40px 36px 32px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.10);
+  text-align: center;
+}
+.login-logo {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.login-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.login-field {
+  text-align: left;
+  margin-bottom: 14px;
+}
+.login-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.login-field input {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s;
+}
+.login-field input:focus { border-color: var(--navy); }
+.login-error {
+  font-size: 12px;
+  color: var(--red);
+  min-height: 18px;
+  margin: 8px 0 12px;
+}
+.btn-login {
+  width: 100%;
+  background: var(--navy);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .18s;
+}
+.btn-login:hover { background: #152d4a; }
+</style>
+</head>
+<body>
+
+<!-- CONSULT MODAL -->
+<div id="consultModal">
+  <div class="modal-card">
+    <div id="consultForm">
+      <div class="modal-title">📞 診断士・浜さんへ相談を依頼する</div>
+      <div class="modal-summary" id="consultSummary"></div>
+      <div class="field">
+        <label class="field-label" style="font-size:13px">担当者のメールアドレス</label>
+        <input type="email" id="consultEmail" placeholder="your@example.com"
+          onkeydown="if(event.key==='Enter') submitConsult()">
+      </div>
+      <div class="login-error" id="consultError"></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-sm" onclick="closeConsultModal()">キャンセル</button>
+        <button class="btn btn-send" id="consultSendBtn" onclick="submitConsult()">📤 送信する</button>
+      </div>
+    </div>
+    <div class="modal-success" id="consultSuccess">
+      <div class="success-icon">✅</div>
+      <p>浜さんへ相談依頼を送りました！<br>折り返し連絡があります。</p>
+      <button class="btn btn-secondary btn-sm" onclick="closeConsultModal()" style="margin-top:16px">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo">🏭 補助金ナビ</div>
+    <div class="login-sub">丸菱北部九州販売｜営業支援ツール</div>
+    <div class="login-field">
+      <label>ユーザーID</label>
+      <input type="text" id="loginId" placeholder="IDを入力" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>パスワード</label>
+      <input type="password" id="loginPw" placeholder="パスワードを入力" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn-login" onclick="doLogin()">ログイン</button>
+  </div>
+</div>
+
+<header>
+  <div>
+    <h1>🏭 補助金ナビ</h1>
+    <div class="header-sub">丸菱北部九州販売｜営業支援ツール</div>
+  </div>
+  <span class="badge-marubishi">診断士連携</span>
+</header>
+
+<div class="container">
+
+  <!-- STEPS -->
+  <div class="steps" id="stepIndicator">
+    <div class="step-item active" id="si1">
+      <div class="step-num">1</div>
+      <div class="step-label">顧客情報</div>
+    </div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-item" id="si2">
+      <div class="step-num">2</div>
+      <div class="step-label">課題・ニーズ</div>
+    </div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-item" id="si3">
+      <div class="step-num">3</div>
+      <div class="step-label">AI照合</div>
+    </div>
+    <div class="step-line" id="sl3"></div>
+    <div class="step-item" id="si4">
+      <div class="step-num">4</div>
+      <div class="step-label">一次回答</div>
+    </div>
+  </div>
+
+  <!-- PAGE 1: 顧客情報 -->
+  <div class="page active" id="page1">
+    <div class="card">
+      <div class="card-title"><span class="icon">🏪</span>顧客基本情報</div>
+      <div class="field">
+        <label class="field-label">顧客名・店舗名</label>
+        <input type="text" id="customerName" placeholder="例：○○ベーカリー、△△レストラン">
+      </div>
+      <div class="field">
+        <label class="field-label">業種</label>
+        <select id="industry">
+          <option value="">--- 選択してください ---</option>
+          <option value="bakery">製パン・ベーカリー</option>
+          <option value="confectionery">製菓・洋菓子・和菓子</option>
+          <option value="restaurant">レストラン・飲食店</option>
+          <option value="hotel">ホテル・旅館</option>
+          <option value="food_mfg">食品製造業（惣菜・加工食品等）</option>
+          <option value="cafe">カフェ・喫茶</option>
+          <option value="new_biz">新規開業・開業検討中</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">従業員規模</label>
+        <select id="employees">
+          <option value="1">1〜5人（小規模事業者）</option>
+          <option value="2">6〜20人</option>
+          <option value="3">21〜100人</option>
+          <option value="4">101人以上</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">担当営業スタッフ名</label>
+        <input type="text" id="salesName" placeholder="例：田中">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="goToPage(2)">次へ → 課題・ニーズを入力</button>
+  </div>
+
+  <!-- PAGE 2: 課題・ニーズ -->
+  <div class="page" id="page2">
+    <div class="card">
+      <div class="card-title"><span class="icon">💬</span>顧客の課題・ニーズ（ヒアリング内容）</div>
+
+      <div class="field">
+        <label class="field-label">顧客から聞いたキーワード（複数選択可）</label>
+        <div class="field-hint">顧客との会話で出てきた話題すべてにチェック</div>
+        <div class="check-grid" id="triggerChecks">
+          <div class="check-item" data-val="differentiation" onclick="toggleCheck(this)">
+            <div class="cb"></div>他がしていないことをやりたい・差別化したい
+          </div>
+          <div class="check-item" data-val="new_product" onclick="toggleCheck(this)">
+            <div class="cb"></div>新商品・新メニューを開発したい
+          </div>
+          <div class="check-item" data-val="labor" onclick="toggleCheck(this)">
+            <div class="cb"></div>人手が足りない・省力化したい
+          </div>
+          <div class="check-item" data-val="promotion" onclick="toggleCheck(this)">
+            <div class="cb"></div>宣伝・集客・Web強化したい
+          </div>
+          <div class="check-item" data-val="renovation" onclick="toggleCheck(this)">
+            <div class="cb"></div>店舗改装・設備増強したい
+          </div>
+          <div class="check-item" data-val="new_biz" onclick="toggleCheck(this)">
+            <div class="cb"></div>新業態・冷食製造を始めたい
+          </div>
+          <div class="check-item" data-val="domestic_ingredient" onclick="toggleCheck(this)">
+            <div class="cb"></div>国産原料（小麦・米粉等）に切替えたい
+          </div>
+          <div class="check-item" data-val="hygiene" onclick="toggleCheck(this)">
+            <div class="cb"></div>HACCP・衛生管理を強化したい
+          </div>
+          <div class="check-item" data-val="export" onclick="toggleCheck(this)">
+            <div class="cb"></div>海外・輸出に展開したい
+          </div>
+          <div class="check-item" data-val="cost" onclick="toggleCheck(this)">
+            <div class="cb"></div>原材料・光熱費コストを下げたい
+          </div>
+          <div class="check-item" data-val="dx" onclick="toggleCheck(this)">
+            <div class="cb"></div>レジ・POSなどDX化したい
+          </div>
+          <div class="check-item" data-val="succession" onclick="toggleCheck(this)">
+            <div class="cb"></div>事業承継・M&Aを考えている
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">想定している投資規模</label>
+        <input type="range" id="investRange" min="0" max="4" value="1" step="1" oninput="updateInvestLabel()">
+        <div class="range-labels">
+          <span>〜100万</span><span>〜500万</span><span>〜1,000万</span><span>〜3,000万</span><span>3,000万〜</span>
+        </div>
+        <div style="text-align:center;margin-top:6px;font-size:13px;font-weight:700;color:var(--navy)" id="investLabel">〜500万円</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">顧客の一言・メモ（任意）</label>
+        <textarea id="freeText" placeholder="例：「古いオーブンをそろそろ替えたいと思ってるんだけど、半額くらい補助が出るって聞いた」"></textarea>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-secondary btn-sm" onclick="goToPage(1)" style="flex:0 0 auto">← 戻る</button>
+      <button class="btn btn-primary" onclick="analyze()" id="analyzeBtn">AIで補助金を照合する →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 3: AI照合 -->
+  <div class="page" id="page3">
+    <div class="card" id="loadingCard">
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingMsg">補助金データと照合中…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: 一次回答 -->
+  <div class="page" id="page4">
+    <div id="resultContent"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── ログイン認証 ─────────────────────────────────────────────
+const CREDENTIALS = { id: 'marubishi', pw: 'sub2026' };
+
+(function checkSession() {
+  if (sessionStorage.getItem('subsidyLoggedIn') === 'true') {
+    document.getElementById('loginOverlay').style.display = 'none';
+  }
+})();
+
+function doLogin() {
+  const id = document.getElementById('loginId').value.trim();
+  const pw = document.getElementById('loginPw').value;
+  const errEl = document.getElementById('loginError');
+  if (id === CREDENTIALS.id && pw === CREDENTIALS.pw) {
+    sessionStorage.setItem('subsidyLoggedIn', 'true');
+    document.getElementById('loginOverlay').style.display = 'none';
+  } else {
+    errEl.textContent = 'IDまたはパスワードが正しくありません';
+    document.getElementById('loginPw').value = '';
+    document.getElementById('loginPw').focus();
+  }
+}
+// ─────────────────────────────────────────────────────────────
+
+// ── Google スプレッドシート連携 ──────────────────────────────
+// Apps Script を公開した後、下記URLを書き換えてください
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOXw6EOPOr0rh6IsQslewYqIaYlEUQQVBBd5qJpBN5EE1fGYgbJm_v9Ezi4ThZYtu3vg/exec';
+
+async function saveToSheet(params) {
+  if (!SHEET_URL || SHEET_URL === 'YOUR_APPS_SCRIPT_URL_HERE') return;
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(params)
+    });
+    showToast('📊 スプレッドシートに保存しました');
+  } catch (e) {
+    console.warn('シート保存失敗:', e);
+  }
+}
+// ─────────────────────────────────────────────────────────────
+
+const investLabels = ["〜100万円", "〜500万円", "〜1,000万円", "〜3,000万円", "3,000万円以上"];
+function updateInvestLabel() {
+  document.getElementById('investLabel').textContent = investLabels[document.getElementById('investRange').value];
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('selected');
+  el.querySelector('.cb').textContent = el.classList.contains('selected') ? '✓' : '';
+}
+
+function getSelectedTriggers() {
+  return Array.from(document.querySelectorAll('.check-item.selected')).map(e => e.dataset.val);
+}
+
+function goToPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + n).classList.add('active');
+  updateSteps(n);
+  window.scrollTo(0, 0);
+}
+
+function updateSteps(current) {
+  for (let i = 1; i <= 4; i++) {
+    const si = document.getElementById('si' + i);
+    si.classList.remove('active', 'done');
+    if (i < current) si.classList.add('done');
+    if (i === current) si.classList.add('active');
+  }
+  for (let i = 1; i <= 3; i++) {
+    const sl = document.getElementById('sl' + i);
+    sl.classList.toggle('done', i < current);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+const loadingMessages = [
+  "補助金データと照合中…",
+  "顧客のニーズを分析中…",
+  "最適な補助金を選定中…",
+  "一次回答を生成中…"
+];
+
+async function analyze() {
+  const industry = document.getElementById('industry').value;
+  const employees = document.getElementById('employees').value;
+  const triggers = getSelectedTriggers();
+  const invest = investLabels[document.getElementById('investRange').value];
+  const freeText = document.getElementById('freeText').value;
+  const customerName = document.getElementById('customerName').value || '顧客';
+  const salesName = document.getElementById('salesName').value || '営業担当';
+
+  if (!industry) { showToast('業種を選択してください'); return; }
+  if (triggers.length === 0) { showToast('課題を1つ以上選択してください'); return; }
+
+  goToPage(3);
+
+  let msgIdx = 0;
+  const msgEl = document.getElementById('loadingMsg');
+  const interval = setInterval(() => {
+    msgIdx = (msgIdx + 1) % loadingMessages.length;
+    msgEl.textContent = loadingMessages[msgIdx];
+  }, 1200);
+
+  const industryNames = {
+    bakery: '製パン・ベーカリー', confectionery: '製菓・洋菓子・和菓子',
+    restaurant: 'レストラン・飲食店', hotel: 'ホテル・旅館',
+    food_mfg: '食品製造業', cafe: 'カフェ・喫茶',
+    new_biz: '新規開業・開業検討中', other: 'その他'
+  };
+  const empLabels = { '1':'1〜5人（小規模）', '2':'6〜20人', '3':'21〜100人', '4':'101人以上' };
+  const triggerNames = {
+    differentiation: '他がしていないことをやりたい・差別化したい',
+    new_product: '新商品・新メニュー開発',
+    labor: '人手不足・省力化',
+    promotion: '宣伝・集客・Web強化',
+    renovation: '店舗改装・設備増強',
+    new_biz: '新業態・冷食製造参入',
+    domestic_ingredient: '国産原料（小麦・米粉等）切替',
+    hygiene: 'HACCP・衛生管理強化',
+    export: '海外・輸出展開',
+    cost: '原材料・コスト削減',
+    dx: 'DX・POSシステム導入',
+    succession: '事業承継・M&A'
+  };
+
+  const triggerList = triggers.map(t => triggerNames[t]).join('、');
+
+  const prompt = `あなたは中小企業診断士の補助金専門家です。以下の顧客情報をもとに、最適な補助金を最大3つ選び、営業スタッフが顧客に伝えるための一次回答を作成してください。
+
+【顧客情報】
+- 顧客名：${customerName}
+- 業種：${industryNames[industry]}
+- 従業員規模：${empLabels[employees]}
+- 顧客の課題・ニーズ：${triggerList}
+- 想定投資規模：${invest}
+- 顧客の一言・メモ：${freeText || 'なし'}
+
+【補助金候補（経産省・農水省）】
+1. ものづくり補助金（経産省）：上限750〜2,500万円、補助率1/2〜2/3。【重要】単なる設備更新では不採択。「他社にない新商品・新サービス開発」「生産プロセスの革新的改善」など差別化・革新性が必須条件。顧客が「他がしていないことをやりたい」「差別化したい」と言っている場合のみ候補に挙げること。
+2. 小規模持続化補助金（経産省）：上限250万円、補助率2/3〜3/4。5人以下限定。広告・設備・店舗改装。
+3. 省力化投資補助金（経産省）：自動化・省人化設備。カタログ型で手続きしやすい。
+4. 新事業進出補助金（経産省）：上限3,500万円。新業態・冷食製造参入など。
+5. 産地連携支援緊急対策（農水省）：国産原料切替に伴う製造ライン投資。億単位も対象。
+6. 食品産業体制強化（農水省）：HACCP・衛生管理設備・加工機械。
+7. 輸出拡大補助 JETRO連携（農水省）：海外展示会・現地プロモーション費。
+8. IT導入補助金（経産省）：POSレジ・予約システム・セルフオーダー導入。
+
+以下のJSON形式のみで回答してください（前置き・説明不要）：
+{
+  "matched_subsidies": [
+    {
+      "name": "補助金名",
+      "ministry": "経産省 or 農水省",
+      "limit": "補助上限額",
+      "rate": "補助率",
+      "match_score": 90,
+      "reason": "この顧客に特におすすめな理由（2〜3文、具体的に）",
+      "priority": "高 or 中"
+    }
+  ],
+  "first_response": "営業スタッフが顧客に送る一次回答メッセージ。\n\n顧客名への呼びかけから始め、補助金の名前と概要、「詳しくは診断士の浜さんにつなぎますね！」で締める。丁寧で親しみやすいトーン。3〜5文程度。",
+  "escalation_note": "診断士へのエスカレーション時に伝えるべきポイント（箇条書き2〜3点）"
+}`;
+
+  try {
+    const res = await fetch('https://subsidy-proxy.vercel.app/api/proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    clearInterval(interval);
+    const data = await res.json();
+    const raw = data.content.map(c => c.text || '').join('');
+    const cleaned = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(cleaned);
+
+    const meta = {
+      employees: empLabels[employees],
+      triggers: triggerList,
+      invest,
+      freeText
+    };
+    renderResult(parsed, customerName, salesName, industryNames[industry], meta);
+    goToPage(4);
+  } catch (e) {
+    clearInterval(interval);
+    // Fallback: show basic result without AI
+    renderFallback(triggers, triggerNames, customerName, industryNames[industry]);
+    goToPage(4);
+  }
+}
+
+function renderResult(data, customerName, salesName, industry, meta = {}) {
+  const { matched_subsidies, first_response, escalation_note } = data;
+
+  let html = '';
+
+  // Matched subsidies
+  html += `<div class="result-section">
+    <h3>✅ マッチした補助金（${matched_subsidies.length}件）</h3>`;
+
+  matched_subsidies.forEach(s => {
+    const score = Math.min(100, Math.max(0, s.match_score || 80));
+    html += `<div class="subsidy-card">
+      <div class="subsidy-card-header">
+        <div>
+          <span class="subsidy-name">${s.name}</span>
+          <span class="priority-badge priority-${s.priority === '高' ? 'high' : 'med'}" style="margin-left:8px">
+            優先度：${s.priority}
+          </span>
+        </div>
+        <span class="subsidy-ministry ${s.ministry.includes('農') ? 'maff' : 'meti'}">${s.ministry}</span>
+      </div>
+      <div class="subsidy-meta">
+        <span>💰 上限：${s.limit}</span>
+        <span>📊 補助率：${s.rate}</span>
+      </div>
+      <div class="match-bar">
+        <span>マッチ度</span>
+        <div class="match-bg"><div class="match-fill" style="width:${score}%"></div></div>
+        <span>${score}%</span>
+      </div>
+      <div class="subsidy-why">${s.reason}</div>
+    </div>`;
+  });
+
+  html += `</div>`;
+
+  // First response
+  html += `<div class="reply-box">
+    <h3>📩 顧客への一次回答（コピーしてすぐ使える）</h3>
+    <div class="reply-text">${first_response}</div>
+  </div>`;
+
+  // Escalation note
+  if (escalation_note) {
+    html += `<div class="card" style="border-color:#E0E4EB">
+      <div class="card-title"><span class="icon">📋</span>診断士へのエスカレーションメモ</div>
+      <div style="font-size:13px;line-height:1.9;white-space:pre-wrap;color:var(--text)">${escalation_note}</div>
+    </div>`;
+  }
+
+  // Buttons
+  html += `<div class="action-buttons">
+    <button class="btn btn-copy" onclick="copyReply()">📋 一次回答をコピー</button>
+    <button class="btn btn-escalate" onclick="escalate()">💬 診断士へ相談を依頼する</button>
+  </div>
+  <div style="margin-top:12px">
+    <button class="btn btn-secondary btn-sm" onclick="goToPage(1)">← 最初からやり直す</button>
+  </div>`;
+
+  document.getElementById('resultContent').innerHTML = html;
+  // Store reply for copy
+  window._replyText = first_response;
+  window._escalateNote = escalation_note;
+  window._customerName = customerName;
+  window._industry = industry;
+  window._subsidies = matched_subsidies;
+
+  // Google スプレッドシートに保存
+  saveToSheet({
+    timestamp: new Date().toLocaleString('ja-JP'),
+    customerName,
+    industry,
+    salesName,
+    employees: meta.employees || '',
+    triggers: meta.triggers || '',
+    invest: meta.invest || '',
+    freeText: meta.freeText || '',
+    subsidies: matched_subsidies.map(s => s.name).join('、'),
+    firstResponse: first_response,
+    escalationNote: escalation_note || ''
+  });
+}
+
+function renderFallback(triggers, triggerNames, customerName, industry) {
+  const triggerList = triggers.map(t => triggerNames[t]).join('、');
+  const response = `${customerName || 'お客様'}、いつもありがとうございます！\n\n本日のお話の中で「${triggerList}」に関するご検討をされているとのこと、実は国からの補助金が活用できる可能性があります！\n\n詳しくは弊社が連携している中小企業診断士の浜さんに確認してもらいますね。うまくいけば投資額の半分以上が補助される可能性もありますよ👍\n\n少し情報をまとめてからご連絡します！`;
+
+  let html = `<div class="result-section">
+    <h3>⚠️ AI照合中に問題が発生しました（基本情報を表示します）</h3>
+    <p style="font-size:13px;color:var(--muted)">キーワード：${triggerList}</p>
+  </div>
+  <div class="reply-box">
+    <h3>📩 顧客への一次回答</h3>
+    <div class="reply-text">${response}</div>
+  </div>
+  <div class="action-buttons">
+    <button class="btn btn-copy" onclick="copyReply()">📋 コピー</button>
+    <button class="btn btn-escalate" onclick="escalate()">📞 相談メモを作成</button>
+  </div>
+  <div style="margin-top:12px">
+    <button class="btn btn-secondary btn-sm" onclick="goToPage(1)">← 最初からやり直す</button>
+  </div>`;
+  document.getElementById('resultContent').innerHTML = html;
+  window._replyText = response;
+}
+
+function copyReply() {
+  if (window._replyText) {
+    navigator.clipboard.writeText(window._replyText).then(() => showToast('✅ コピーしました！LINEやメールに貼り付けてください'));
+  }
+}
+
+function escalate() {
+  const customerName = window._customerName || '顧客';
+  const industry = window._industry || '';
+  const subsidies = (window._subsidies || []).map(s => `${s.name}（${s.ministry}）`).join('、');
+  const note = window._escalateNote || '';
+  const salesName = document.getElementById('salesName').value || '営業担当';
+  const freeText = document.getElementById('freeText').value;
+
+  // サマリーをモーダルに表示
+  document.getElementById('consultSummary').innerHTML = `
+    <strong>顧客名：</strong>${customerName}<br>
+    <strong>業種：</strong>${industry}<br>
+    <strong>担当者：</strong>${salesName}<br>
+    <strong>候補補助金：</strong>${subsidies || '（照合結果なし）'}<br>
+    <strong>診断士へのポイント：</strong>${note || freeText || '（メモなし）'}
+  `;
+
+  // 送信データを保持
+  window._consultData = { customerName, industry, salesName, subsidies, note, freeText,
+    firstResponse: window._replyText || '' };
+
+  // モーダルをリセットして表示
+  document.getElementById('consultForm').style.display = '';
+  document.getElementById('consultSuccess').style.display = 'none';
+  document.getElementById('consultEmail').value = '';
+  document.getElementById('consultError').textContent = '';
+  document.getElementById('consultModal').classList.add('open');
+  setTimeout(() => document.getElementById('consultEmail').focus(), 100);
+}
+
+function closeConsultModal() {
+  document.getElementById('consultModal').classList.remove('open');
+}
+
+async function submitConsult() {
+  const email = document.getElementById('consultEmail').value.trim();
+  const errEl = document.getElementById('consultError');
+  if (!email || !email.includes('@')) {
+    errEl.textContent = 'メールアドレスを正しく入力してください';
+    return;
+  }
+  errEl.textContent = '';
+  const btn = document.getElementById('consultSendBtn');
+  btn.disabled = true;
+  btn.textContent = '送信中…';
+
+  const d = window._consultData || {};
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        type: 'consultation',
+        timestamp: new Date().toLocaleString('ja-JP'),
+        salesEmail: email,
+        customerName: d.customerName || '',
+        industry: d.industry || '',
+        salesName: d.salesName || '',
+        subsidies: d.subsidies || '',
+        escalationNote: d.note || d.freeText || '',
+        firstResponse: d.firstResponse || ''
+      })
+    });
+    document.getElementById('consultForm').style.display = 'none';
+    document.getElementById('consultSuccess').style.display = 'block';
+  } catch (e) {
+    errEl.textContent = '送信に失敗しました。もう一度お試しください。';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📤 送信する';
+  }
+}
+</script>
+</body>
+</html>
